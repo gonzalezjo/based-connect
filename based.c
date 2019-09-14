@@ -15,6 +15,7 @@ int has_noise_cancelling(unsigned int device_id) {
 		case 0x4014:
 		case 0x4020:
 		case 0x400c:
+		case 0x4024: // NC 700
 			return 1;
 		default:
 			return 0;
