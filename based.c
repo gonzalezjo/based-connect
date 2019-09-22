@@ -256,9 +256,10 @@ static int get_noise_cancelling(int sock, enum NoiseCancelling *level) {
 	return 0;
 }
 
-int set_noise_cancelling(int sock, enum NoiseCancelling level) {
-	static uint8_t send[] = { 0x01, 0x06, 0x02, 0x01, ANY };
-	send[4] = level;
+int set_noise_cancelling(int sock, int level) {
+	static uint8_t send[] = { 0x01, 0x05, 0x02, 02, ANY, 0x01, 0x38};
+	// static uint8_t send[] = { 0x01, 0x06, 0x02, 0x01, ANY };
+	send[4] = 10 - level;
 
 	int status = write(sock, send, sizeof(send));
 	if (status != sizeof(send)) {

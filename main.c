@@ -147,15 +147,9 @@ static int do_set_auto_off(int sock, const char *arg) {
 }
 
 static int do_set_noise_cancelling(int sock, const char *arg) {
-	enum NoiseCancelling nc;
+	int parsed = atoi(arg);
 
-	if (strcmp(arg, "high") == 0) {
-		nc = NC_HIGH;
-	} else if (strcmp(arg, "low") == 0) {
-		nc = NC_LOW;
-	} else if (strcmp(arg, "off") == 0) {
-		nc = NC_OFF;
-	} else {
+	if (parsed < 0 || parsed > 10) {
 		fprintf(stderr, "Invalid noise cancelling argument: %s\n", arg);
 		usage();
 		return 1;
@@ -174,7 +168,7 @@ static int do_set_noise_cancelling(int sock, const char *arg) {
 		return 1;
 	}
 
-	return set_noise_cancelling(sock, nc);
+	return set_noise_cancelling(sock, parsed);
 }
 
 static int do_get_device_status(int sock) {
