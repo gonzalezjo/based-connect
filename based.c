@@ -257,7 +257,7 @@ static int get_noise_cancelling(int sock, enum NoiseCancelling *level) {
 }
 
 int set_noise_cancelling(int sock, int level) {
-	static uint8_t send[] = { 0x01, 0x05, 0x02, 02, ANY, 0x01, 0x38};
+	static uint8_t send[] = { 0x01, 0x05, 0x02, 0x2, ANY, 0x01, 0x38};
 	// static uint8_t send[] = { 0x01, 0x06, 0x02, 0x01, ANY };
 	send[4] = 10 - level;
 
@@ -273,6 +273,28 @@ int set_noise_cancelling(int sock, int level) {
 	}
 
 	return abs(level - got_level);
+}
+
+void set_wake_word(int sock, int mode) {
+	// static uint8_t send[] = { 0x10, 0x3, 0x2, 1, 1, 0x38};
+	// static uint8_t send[] = { 0x10, 0x2, 0x1, 0, 0x38};
+	static uint8_t send[] = { 0x10, 0x3, 0x2, 1, 0x41, 0x38}; // alexa on
+	// static uint8_t send[] = { 0x10, 3, 0x2, 0x1, 0x64, 0x38 }; // works fine for alexa, does nothing diff?
+	// static uint8_t send[] = { 0x10, 0x3, 0x0, 0x0, 0x41, 0x38 }; // works fine for alexa, does nothing diff?
+
+	// static uint8_t send[] = { 0x10, 0x3, 0x1, 0, 0x38}; // ? was sent
+
+	// Doubtable--were actually RECEIVED: 
+	// static uint8_t send[] = { 0x10, 0x3, 0x3, 2, 1, 2, 0xfe}; // ? was sent
+	// static uint8_t send[] = { 0x10, 0x3, 0x3, 2, 1, 2, 0x38}; // ? was sent
+
+	// static uint8_t send_off[] = { 0x10, 0x3, 0x2, 1, 1, 0x38}; // wakeup word off
+
+	// static uint8_t send[] = { 0x01, 0x06, 0x02, 0x01, ANY };
+
+	// if (mode == 0) write(sock, send_off, sizeof(send_off));
+	int status = write(sock, send, sizeof(send));
+	printf("wakeword status: %d\n", status);
 }
 
 int get_device_status(int sock, char name[MAX_NAME_LEN + 1], enum PromptLanguage *language,

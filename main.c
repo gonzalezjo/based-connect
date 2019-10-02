@@ -171,6 +171,27 @@ static int do_set_noise_cancelling(int sock, const char *arg) {
 	return set_noise_cancelling(sock, parsed);
 }
 
+static int do_set_wake_word(int sock, const char *arg) {
+	int parsed = atoi(arg);
+
+	if (parsed < 0 || parsed > 10) {
+		fprintf(stderr, "Invalid wakeword argument: %s\n", arg);
+		usage();
+		return 1;
+	}
+
+	unsigned int device_id;
+	unsigned int index;
+	int status = get_device_id(sock, &device_id, &index);
+	if (status) {
+		return status;
+	}
+
+	set_wake_word(sock, parsed);
+
+	return 1;
+}
+
 static int do_get_device_status(int sock) {
 	char name[MAX_NAME_LEN + 1];
 	enum PromptLanguage pl;
@@ -414,7 +435,7 @@ static int do_send_packet(int sock, const char *arg) {
 }
 
 int main(int argc, char *argv[]) {
-	static const char *short_opt = "hn:l:v:o:c:dp:fsba";
+	static const char *short_opt = "hn:l:v:o:cw:dp:fsba";
 	static const struct option long_opt[] = {
 		{ "help", no_argument, NULL, 'h' },
 		{ "name", required_argument, NULL, 'n' },
@@ -422,6 +443,7 @@ int main(int argc, char *argv[]) {
 		{ "voice-prompts", required_argument, NULL, 'v' },
 		{ "auto-off", required_argument, NULL, 'o' },
 		{ "noise-cancelling", required_argument, NULL, 'c' },
+		{ "wake-word", required_argument, NULL, 'w' },
 		{ "device-status", no_argument, NULL, 'd' },
 		{ "pairing", required_argument, NULL, 'p' },
 		{ "firmware-version", no_argument, NULL, 'f' },
@@ -510,6 +532,9 @@ int main(int argc, char *argv[]) {
 				break;
 			case 'c':
 				status = do_set_noise_cancelling(sock, optarg);
+				break;
+			case 'w':
+				status = do_set_wake_word(sock, optarg);
 				break;
 			case 'd':
 				status = do_get_device_status(sock);

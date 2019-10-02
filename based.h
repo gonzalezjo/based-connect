@@ -74,6 +74,7 @@ int set_prompt_language(int sock, enum PromptLanguage language);
 int set_voice_prompts(int sock, int on);
 int set_auto_off(int sock, enum AutoOff minutes);
 int set_noise_cancelling(int sock, int level);
+void set_wake_word(int sock, int level);
 int get_device_status(int sock, char name[MAX_NAME_LEN + 1], enum PromptLanguage *language,
 		enum AutoOff *minutes, enum NoiseCancelling *level);
 int set_pairing(int sock, enum Pairing pairing);
